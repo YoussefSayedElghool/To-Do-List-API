@@ -15,6 +15,7 @@ namespace To_Do_List_API.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
+        public virtual User Users { get; set; }
 
 
     }

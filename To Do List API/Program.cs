@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using To_Do_List_API.Models;
+using To_Do_List_API.Repository.abstraction_layer;
+using To_Do_List_API.Repository;
 
 namespace To_Do_List_API
 {
@@ -19,7 +21,8 @@ namespace To_Do_List_API
             });
 
             builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
-
+            // Register 
+            builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
