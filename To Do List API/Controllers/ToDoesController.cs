@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using To_Do_List_API.Service.abstraction_layer;
 
 namespace To_Do_List_API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ToDoesController : ControllerBase
@@ -27,7 +29,7 @@ namespace To_Do_List_API.Controllers
 
         // GET: api/ToDoes
         [HttpGet]
-        public async Task<ActionResult<QueryResultDto<IEnumerable<ToDoDto>>>> GetToDos(int CategoryId)
+        public async Task<ActionResult<QueryResultDto<IEnumerable<ToDoDto>>>> GetToDos([FromQuery] int CategoryId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             QueryResultDto<List<ToDoDto>> queryResultDto = await toDoService.GetToDoesAsync(userId , CategoryId);
@@ -52,7 +54,7 @@ namespace To_Do_List_API.Controllers
         }
 
         // PUT: api/ToDoes/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult<ToDoDto>> EditToDo(ToDoDto toDoDto)
         {
             if (!ModelState.IsValid)
@@ -80,6 +82,7 @@ namespace To_Do_List_API.Controllers
                 return BadRequest(new QueryResultDto<ToDoDto>() { Result = toDoDto, IsCompleteSuccessfully = false });
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Console.WriteLine($"Retrieved UserId: {userId}");
 
             if (toDoDto == null || string.IsNullOrEmpty(userId))
                 return NotFound(toDoDto);

@@ -9,6 +9,9 @@ namespace To_Do_List_API.Profiles
         public ToDoProfile()
         {
             CreateMap<ToDo, ToDoDto>().ReverseMap();
+
+            CreateMap<QueryResultDto<ToDo>, QueryResultDto<ToDoDto>>().ReverseMap();
+            CreateMap<QueryResultDto<List<ToDo>>, QueryResultDto<List<ToDoDto>>>().ReverseMap();
         }
     }
 }
