@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using To_Do_List_API.DTO;
+using To_Do_List_API.Helpers;
 using To_Do_List_API.Service.abstraction_layer;
 
 namespace To_Do_List_API.Controllers
@@ -19,7 +21,10 @@ namespace To_Do_List_API.Controllers
         public async Task<ActionResult<QueryResultDto<AccountDto>>> RegisterAsync(RegisterDto registerDto)
         {
             if (registerDto is null || !ModelState.IsValid)
-                return BadRequest(ModelState); // hint : 
+                return BadRequest(new QueryResultDto<AccountDto>() { 
+                IsCompleteSuccessfully = false,
+                ErrorMessages = ErrorMessageUserConst.Custom(400 , string.Join("\n" , ModelState.Values.SelectMany(v => v.Errors)))
+                });
 
             var result = await accountingService.RegisterAsync(registerDto);
 
@@ -35,7 +40,11 @@ namespace To_Do_List_API.Controllers
         {
 
             if (loginDto is null || !ModelState.IsValid)
-                return BadRequest(ModelState); // hint : 
+                return BadRequest(new QueryResultDto<AccountDto>()
+                {
+                    IsCompleteSuccessfully = false,
+                    ErrorMessages = ErrorMessageUserConst.Custom(400, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors)))
+                });
 
             var result = await accountingService.LoginAsync(loginDto);
 
@@ -52,7 +61,11 @@ namespace To_Do_List_API.Controllers
             var refreshToken = revokeTokenDto.refreshToken;
 
             if (!ModelState.IsValid || string.IsNullOrEmpty(refreshToken))
-                return BadRequest(ModelState); // hint
+                return BadRequest(new QueryResultDto<AccountDto>()
+                {
+                    IsCompleteSuccessfully = false,
+                    ErrorMessages = ErrorMessageUserConst.Custom(400, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors)))
+                });
 
 
             var result = await accountingService.RefreshTokenAsync(refreshToken);
@@ -70,7 +83,11 @@ namespace To_Do_List_API.Controllers
 
             var refreshToken = revokeTokenDto.refreshToken;
             if (!ModelState.IsValid || string.IsNullOrEmpty(refreshToken))
-                return BadRequest(ModelState); // hint
+                return BadRequest(new QueryResultDto<bool>()
+                {
+                    IsCompleteSuccessfully = false,
+                    ErrorMessages = ErrorMessageUserConst.Custom(400, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors)))
+                });
 
 
             var result = await accountingService.RevokeTokenAsync(refreshToken);

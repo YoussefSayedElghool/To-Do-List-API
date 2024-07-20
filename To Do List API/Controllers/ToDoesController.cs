@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using To_Do_List_API.DTO;
+using To_Do_List_API.Helpers;
 using To_Do_List_API.Models;
 using To_Do_List_API.Service.abstraction_layer;
 
@@ -57,8 +58,12 @@ namespace To_Do_List_API.Controllers
         [HttpPut]
         public async Task<ActionResult<ToDoDto>> EditToDo(ToDoDto toDoDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new QueryResultDto<ToDoDto>() { Result = toDoDto, IsCompleteSuccessfully = false });
+                if (!ModelState.IsValid)
+                    return BadRequest(new QueryResultDto<ToDoDto>()
+                    {
+                        IsCompleteSuccessfully = false,
+                        ErrorMessages = ErrorMessageUserConst.Custom(400, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors)))
+                    });
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -79,13 +84,21 @@ namespace To_Do_List_API.Controllers
         public async Task<ActionResult<ToDoDto>> AddToDo(ToDoDto toDoDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new QueryResultDto<ToDoDto>() { Result = toDoDto, IsCompleteSuccessfully = false });
+                return BadRequest(new QueryResultDto<ToDoDto>()
+                {
+                    IsCompleteSuccessfully = false,
+                    ErrorMessages = ErrorMessageUserConst.Custom(400, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors)))
+                });
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Console.WriteLine($"Retrieved UserId: {userId}");
 
             if (toDoDto == null || string.IsNullOrEmpty(userId))
-                return NotFound(toDoDto);
+                return BadRequest(new QueryResultDto<ToDoDto>()
+                {
+                    IsCompleteSuccessfully = false,
+                    ErrorMessages = ErrorMessageUserConst.Custom(404, string.Join("\n", ModelState.Values.SelectMany(v => v.Errors))),
+                    Result = toDoDto
+                });
 
             QueryResultDto<ToDoDto> queryResultDto = await toDoService.AddToDoAsync(toDoDto, userId);
 
