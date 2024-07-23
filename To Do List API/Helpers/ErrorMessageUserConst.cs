@@ -8,6 +8,7 @@
         public static Error incorrectEmailOrPassword = new Error(406, "Email or Password is incorrect!");
         public static Error InvalidToken = new Error(498, "Invalid token");
         public static Error Unexpected = new Error(500, "Unexpected Error");
+        public static Error ImageUploadErorr = new Error(500, "Erorr happend when image upload");
 
         public static Error Custom(ushort code, string error) => new Error(code, error);
 

@@ -33,6 +33,8 @@ namespace To_Do_List_API
             builder.Services.AddScoped<IRefreshTokenRepository,RefreshTokenRepository>();
             builder.Services.AddScoped<IToDoService, ToDoService>();
             builder.Services.AddScoped<IAccountingService, AccountingService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 
