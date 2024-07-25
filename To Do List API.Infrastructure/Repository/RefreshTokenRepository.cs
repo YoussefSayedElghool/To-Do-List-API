@@ -21,7 +21,7 @@ namespace To_Do_List_API.Repository
             this.userManager = userManager;
         }
 
-        public async Task<QueryResultDto<RefreshToken>> GetActiveRefreshTokenAsync(User user)
+        public async Task<QueryResultDto<RefreshToken>> GetActiveRefreshTokenAsync(IUserBase user)
         {
             if (user is null) new QueryResultDto<RefreshToken> { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.IncorrectInput };
 
@@ -39,7 +39,7 @@ namespace To_Do_List_API.Repository
                 result.Token = refreshToken.Token;
                 result.ExpiresOn = refreshToken.ExpiresOn;
                 user.RefreshTokens.Add(refreshToken);
-                await userManager.UpdateAsync(user);
+                await userManager.UpdateAsync((User)user);
             }
 
             return new QueryResultDto<RefreshToken>
@@ -51,18 +51,18 @@ namespace To_Do_List_API.Repository
 
         }
 
-        public async Task<QueryResultDto<User>> RevokeRefreshTokenAsync(string token)
+        public async Task<QueryResultDto<IUserBase>> RevokeRefreshTokenAsync(string token)
         {
             var user = await userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
             if (user == null)
-                return new QueryResultDto<User>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.InvalidToken };
+                return new QueryResultDto<IUserBase>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.InvalidToken };
 
 
             var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
            
             if (!refreshToken.IsActive)
-                return new QueryResultDto<User>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.InvalidToken };
+                return new QueryResultDto<IUserBase>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.InvalidToken };
 
 
             refreshToken.RevokedOn = DateTime.UtcNow;
@@ -73,11 +73,11 @@ namespace To_Do_List_API.Repository
             }
             catch (Exception)
             {
-                return new QueryResultDto<User>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.Unexpected};
+                return new QueryResultDto<IUserBase>() { IsCompleteSuccessfully = false, ErrorMessages = ErrorMessageUserConst.Unexpected};
 
             }
 
-            return new QueryResultDto<User>() { IsCompleteSuccessfully = true , Result = user };
+            return new QueryResultDto<IUserBase>() { IsCompleteSuccessfully = true , Result = user };
 
         }
 

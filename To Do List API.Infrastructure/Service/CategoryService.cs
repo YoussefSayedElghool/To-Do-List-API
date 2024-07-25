@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using To_Do_List_API.DTO;
 using To_Do_List_API.Helpers;
 using To_Do_List_API.Models;
 using To_Do_List_API.Repository.abstraction_layer;
 using To_Do_List_API.Service.abstraction_layer;
-using static Online_Food_Ordering_System.Models.UploadUtility;
+using static To_Do_List_API.Helpers.UploadUtility;
 
 namespace To_Do_List_API.Service
 {

@@ -8,7 +8,7 @@ namespace To_Do_List_API.Profiles
     {
         public UserProfile()
         {
-            CreateMap<RegisterDto, User>();
+            CreateMap<RegisterDto, IUserBase>();
         }
     }
 }

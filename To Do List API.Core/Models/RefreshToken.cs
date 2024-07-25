@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using To_Do_List_API.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace To_Do_List_API.Models
 {
@@ -22,6 +16,6 @@ namespace To_Do_List_API.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
 
-        public virtual User User { get; set; } = null!;
+        public virtual IUserBase User { get; set; } = null!;
     }
 }

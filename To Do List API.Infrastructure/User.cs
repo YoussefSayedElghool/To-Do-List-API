@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using To_Do_List_API.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿
+
+using Microsoft.AspNetCore.Identity;
 
 namespace To_Do_List_API.Models
 {
-    public class User :IdentityUser
+    public class User : IdentityUser, IUserBase
     {
         public required string DisplayName { get; set; }
         public string Image { get; set; }
