@@ -10,6 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using To_Do_List_API.Service.abstraction_layer;
 using To_Do_List_API.Service;
+using To_Do_List_API.Core.Repository_Abstraction_Layer;
+using To_Do_List_API.Core.Repository_Abstraction_Layer.UnitOfWork;
+using To_Do_List_API.Infrastructure.Repository.UnitOfWork;
 
 namespace To_Do_List_API
 {
@@ -35,6 +38,7 @@ namespace To_Do_List_API
             builder.Services.AddScoped<IAccountingService, AccountingService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IRepositoryUnitOfWork, RepositoryUnitOfWork>();
 
 
 

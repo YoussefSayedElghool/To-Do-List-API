@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using To_Do_List_API.Core.Repository_Abstraction_Layer.UnitOfWork;
 using To_Do_List_API.DTO;
 using To_Do_List_API.Helpers;
 using To_Do_List_API.Models;
@@ -22,14 +23,14 @@ namespace To_Do_List_API.Service
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper mapper;
-        private readonly IRefreshTokenRepository refreshTokenRepository;
+        private readonly IRepositoryUnitOfWork repositoryUnitOfWork;
         private readonly JWT _jwt;
-        public AccountingService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt,IMapper mapper , IRefreshTokenRepository refreshTokenRepository)
+        public AccountingService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt,IMapper mapper , IRepositoryUnitOfWork repositoryUnitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             this.mapper = mapper;
-            this.refreshTokenRepository = refreshTokenRepository;
+            this.repositoryUnitOfWork = repositoryUnitOfWork;
             _jwt = jwt.Value;
         }
 
@@ -71,7 +72,7 @@ namespace To_Do_List_API.Service
         public async Task<QueryResultDto<AccountDto>> RefreshTokenAsync(string token)
         {
             
-            var result = await refreshTokenRepository.RevokeRefreshTokenAsync(token);
+            var result = await repositoryUnitOfWork.RefreshTokens.RevokeRefreshTokenAsync(token);
 
             if (!result.IsCompleteSuccessfully)
 
@@ -89,7 +90,7 @@ namespace To_Do_List_API.Service
 
         public async Task<QueryResultDto<bool>> RevokeTokenAsync(string token)
         {
-            var result = await refreshTokenRepository.RevokeRefreshTokenAsync(token);
+            var result = await repositoryUnitOfWork.RefreshTokens.RevokeRefreshTokenAsync(token);
 
             if (!result.IsCompleteSuccessfully)
                 
@@ -141,7 +142,7 @@ namespace To_Do_List_API.Service
         {
             var jwtSecurityToken = await CreateJwtToken(user);
 
-            QueryResultDto<RefreshToken> refreshTokenResult = await refreshTokenRepository.GetActiveRefreshTokenAsync(user);
+            QueryResultDto<RefreshToken> refreshTokenResult = await repositoryUnitOfWork.RefreshTokens.GetActiveRefreshTokenAsync(user);
 
             if (!refreshTokenResult.IsCompleteSuccessfully)
                 return new QueryResultDto<AccountDto>()

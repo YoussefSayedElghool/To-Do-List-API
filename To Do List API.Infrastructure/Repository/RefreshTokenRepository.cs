@@ -4,18 +4,19 @@ using NuGet.Common;
 using System.Security.Cryptography;
 using To_Do_List_API.DTO;
 using To_Do_List_API.Helpers;
+using To_Do_List_API.Infrastructure.Repository;
 using To_Do_List_API.Models;
 using To_Do_List_API.Repository.abstraction_layer;
 
 namespace To_Do_List_API.Repository
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    public class RefreshTokenRepository : BaseRepository<RefreshToken> ,  IRefreshTokenRepository
     {
 
         AppDbContext context;
         private readonly UserManager<User> userManager;
 
-        public RefreshTokenRepository(AppDbContext _context , UserManager<User> userManager)
+        public RefreshTokenRepository(AppDbContext _context , UserManager<User> userManager) : base(_context)
         {
             context = _context;
             this.userManager = userManager;
